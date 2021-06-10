@@ -18,8 +18,7 @@ public class MyRunner implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		ResponseEntity<String> re = restTemplate.getForEntity("http://localhost:8080/productcategory/filldb",
-				String.class);
+		ResponseEntity<String> re = restTemplate.getForEntity("http://localhost:8080/productcategory/filldb", String.class);
 		logger.debug(re.getBody());
 
 	}

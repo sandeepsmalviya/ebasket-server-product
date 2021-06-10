@@ -1,6 +1,9 @@
 package com.ebasket.server.product.services.impl.h2;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import com.ebasket.server.product.repository.ProductRepository;
 import com.ebasket.server.product.services.ProductService;
 
 @Service
+@Transactional
 public class ProductServiceImplH2 implements ProductService {
 
 	@Autowired
@@ -31,6 +35,14 @@ public class ProductServiceImplH2 implements ProductService {
 
 	@Override
 	public Product findById(int productId) throws ProductNotFoundException {
+
+		try {
+
+		} catch (NoSuchElementException exception) {
+			throw new ProductNotFoundException("Product with id = " + productId + " not found", exception);
+		} catch (Exception exception) {
+			throw exception;
+		}
 		return productRepository.findById(productId).get();
 	}
 

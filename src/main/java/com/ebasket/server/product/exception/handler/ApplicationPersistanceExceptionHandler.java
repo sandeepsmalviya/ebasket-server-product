@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -20,26 +20,10 @@ import com.ebasket.server.product.exception.ProductCategoryNotFoundException;
 import com.ebasket.server.product.exception.ProductNotFoundException;
 import com.ebasket.server.product.exception.error.DemoErrorMessage;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ApplicationPersistanceExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationPersistanceExceptionHandler.class);
-
-	@ExceptionHandler(value = Exception.class)
-	public ResponseEntity<Object> handleAnyException(Exception ex, WebRequest webRequest) {
-
-		String errorMessageDescription = ex.getLocalizedMessage();
-		if (errorMessageDescription == null) {
-			errorMessageDescription = ex.toString();
-		}
-
-		errorMessageDescription = errorMessageDescription + "\t" + " Default Exception Handler is called";
-
-		printStackTrace(ex, errorMessageDescription);
-
-		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
-		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-	}
 
 	private void printStackTrace(Exception ex, String errorMessageDescription) {
 		StringWriter sw = new StringWriter();
@@ -59,7 +43,7 @@ public class ApplicationPersistanceExceptionHandler extends ResponseEntityExcept
 			errorMessageDescription = ex.toString();
 		}
 
-		errorMessageDescription = errorMessageDescription + "\t" + " NullPointerException Exception Handler is called";
+	//	errorMessageDescription = errorMessageDescription + "\t" + " NullPointerException Exception Handler is called";
 		printStackTrace(ex, errorMessageDescription);
 
 		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
@@ -74,12 +58,11 @@ public class ApplicationPersistanceExceptionHandler extends ResponseEntityExcept
 			errorMessageDescription = ex.toString();
 		}
 
-		errorMessageDescription = errorMessageDescription + "\t"
-				+ " ProductNotFoundException Exception Handler is called";
+		//errorMessageDescription = errorMessageDescription + "\t" + " ProductNotFoundException Exception Handler is called";
 		printStackTrace(ex, errorMessageDescription);
 
 		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
-		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(value = ProductCategoryNotFoundException.class)
@@ -91,8 +74,7 @@ public class ApplicationPersistanceExceptionHandler extends ResponseEntityExcept
 			errorMessageDescription = ex.toString();
 		}
 
-		errorMessageDescription = errorMessageDescription + "\t"
-				+ " ProductCategoryNotFoundException Exception Handler is called";
+		//errorMessageDescription = errorMessageDescription + "\t" + " ProductCategoryNotFoundException Exception Handler is called";
 		printStackTrace(ex, errorMessageDescription);
 
 		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
@@ -129,6 +111,22 @@ public class ApplicationPersistanceExceptionHandler extends ResponseEntityExcept
 
 		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
 		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(value = Exception.class)
+	public ResponseEntity<Object> handleAnyException(Exception ex, WebRequest webRequest) {
+
+		String errorMessageDescription = ex.getLocalizedMessage();
+		if (errorMessageDescription == null) {
+			errorMessageDescription = ex.toString();
+		}
+
+		errorMessageDescription = errorMessageDescription + "\t" + " Default Exception Handler is called";
+
+		printStackTrace(ex, errorMessageDescription);
+
+		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
+		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*

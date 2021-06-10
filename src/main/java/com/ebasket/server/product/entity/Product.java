@@ -39,8 +39,8 @@ public class Product implements Serializable {
 	private int productId;
 
 	
-	@NotNull
-	@NotEmpty
+	@NotNull(message = "Product name is required.")
+	@NotEmpty(message = "Product name is required.")
 	@Size(max = 255)
 	private String productName;
 	

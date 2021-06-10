@@ -1,6 +1,7 @@
 package com.ebasket.server.product.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
@@ -18,25 +19,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ebasket.server.product.EbasketServerProductApplication;
 import com.ebasket.server.product.entity.Product;
 import com.ebasket.server.product.exception.ProductNotFoundException;
 import com.ebasket.server.product.services.ProductService;
 
 @RestController
 public class ProductController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
-	
-	
 	@Value("${spring.application.name}")
 	private String applicationName;
-	
 
 	@Autowired
 	ProductService productService;
-	
 
 	@GetMapping("/product/test")
 	public String hellpProducts() {
@@ -52,38 +48,71 @@ public class ProductController {
 
 	@GetMapping("/product/{productId}")
 	public ResponseEntity<Product> getProduct(@PathVariable int productId) throws ProductNotFoundException {
-		Product product = productService.findById(productId);
-		return new ResponseEntity<>(product, HttpStatus.OK);
+
+		try {
+			Product product = productService.findById(productId);
+			return new ResponseEntity<>(product, HttpStatus.OK);
+		} catch (ProductNotFoundException exception) {
+			throw exception;
+		} catch (Exception exception) {
+			throw exception;
+		}
 
 	}
 
 	@GetMapping("/product/")
 	public ResponseEntity<Product[]> getAllProducts() throws ProductNotFoundException {
-		List<Product> productList = productService.findAll();
-		Product[] productArray = productList.toArray(new Product[0]);
-		return new ResponseEntity<>(productArray, HttpStatus.OK);
+
+		try {
+			List<Product> productList = productService.findAll();
+
+			if (productList == null || productList.isEmpty()) {
+				Product[] productArray = productList.toArray(new Product[0]);
+				return new ResponseEntity<>(productArray, HttpStatus.NO_CONTENT);
+			} else {
+				Product[] productArray = productList.toArray(new Product[0]);
+				return new ResponseEntity<>(productArray, HttpStatus.OK);
+			}
+
+		} catch (Exception exception) {
+			throw exception;
+		}
 
 	}
 
 	@DeleteMapping("/product/{productId}")
 	public ResponseEntity<String> deleteProduct(@PathVariable int productId) throws ProductNotFoundException {
-		productService.delete(productId);
-		return new ResponseEntity<>("Product is deleted successfully", HttpStatus.OK);
+
+		try {
+			productService.delete(productId);
+			return new ResponseEntity<>("Product with id = " + productId + " is deleted", HttpStatus.OK);
+		} catch (NoSuchElementException exception) {
+			throw new ProductNotFoundException("Product with id = " + productId + " not found, cant' delete",
+					exception);
+		} catch (Exception exception) {
+			throw exception;
+		}
 
 	}
 
 	@PutMapping("/product/{productId}")
-	public ResponseEntity<String> updateProduct(@PathVariable int productId, @Valid @RequestBody Product product)
+	public ResponseEntity<Product> updateProduct(@PathVariable int productId, @Valid @RequestBody Product product)
 			throws ProductNotFoundException {
-		Product productUpdated = productService.update(product);
-		return new ResponseEntity<>("Product is updated successfully", HttpStatus.OK);
+
+		try {
+			Product productUpdated = productService.update(product);
+			return new ResponseEntity<>(product, HttpStatus.OK);
+		} catch (Exception exception) {
+			throw new ProductNotFoundException("Product with id = " + productId + " not found, cant' update",
+					exception);
+		}
 
 	}
 
 	@PostMapping("/product/")
 	public ResponseEntity<String> createProduct(@Valid @RequestBody Product product) throws ProductNotFoundException {
 		Product productCreated = productService.update(product);
-		return new ResponseEntity<>("Product is created successfully", HttpStatus.CREATED);
+		return new ResponseEntity<>("Product is created", HttpStatus.CREATED);
 	}
 
 }
