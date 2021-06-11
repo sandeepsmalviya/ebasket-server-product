@@ -1,6 +1,6 @@
 package com.ebasket.server.product.exception;
 
-public class ProductNotFoundException extends RuntimeException {
+public class ProductNotFoundException extends Exception {
 
 	/**
 	 * 

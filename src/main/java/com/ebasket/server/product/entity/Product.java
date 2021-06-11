@@ -3,6 +3,7 @@ package com.ebasket.server.product.entity;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -63,7 +64,7 @@ public class Product implements Serializable {
 	@Lob
 	private byte[] productImage;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private ProductCategory productCategory;
 
 	private Timestamp productCareatedDate;

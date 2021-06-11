@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -18,12 +19,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.ebasket.server.product.exception.ProductCategoryNotFoundException;
 import com.ebasket.server.product.exception.ProductNotFoundException;
+import com.ebasket.server.product.exception.ServiceException;
 import com.ebasket.server.product.exception.error.DemoErrorMessage;
+import com.ebasket.server.product.exception.error.ErrorMessage;
 
 @RestControllerAdvice
-public class ApplicationPersistanceExceptionHandler extends ResponseEntityExceptionHandler {
+public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(ApplicationPersistanceExceptionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationExceptionHandler.class);
 
 	private void printStackTrace(Exception ex, String errorMessageDescription) {
 		StringWriter sw = new StringWriter();
@@ -34,24 +37,26 @@ public class ApplicationPersistanceExceptionHandler extends ResponseEntityExcept
 		logger.error(errorLogForException);
 
 	}
-
-	@ExceptionHandler(value = NullPointerException.class)
-	public ResponseEntity<Object> handleNullPointerException(NullPointerException ex, WebRequest webRequest) {
+	@ExceptionHandler(value = UnexpectedRollbackException.class)
+	public ResponseEntity<ErrorMessage> handleUnexpectedRollbackException(UnexpectedRollbackException ex, WebRequest webRequest) {
 
 		String errorMessageDescription = ex.getLocalizedMessage();
 		if (errorMessageDescription == null) {
 			errorMessageDescription = ex.toString();
 		}
 
-	//	errorMessageDescription = errorMessageDescription + "\t" + " NullPointerException Exception Handler is called";
+		errorMessageDescription = errorMessageDescription + "\t" + " UnexpectedRollbackException Exception Handler is called";
 		printStackTrace(ex, errorMessageDescription);
 
-		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
-		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+		//DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
+		
+		ErrorMessage errorMessage2 = new ErrorMessage(HttpStatus.NOT_FOUND, errorMessageDescription, ex);
+		return new ResponseEntity<ErrorMessage>(errorMessage2, new HttpHeaders(), HttpStatus.NOT_FOUND);
 	}
-
+	
+	
 	@ExceptionHandler(value = ProductNotFoundException.class)
-	public ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundException ex, WebRequest webRequest) {
+	public ResponseEntity<ErrorMessage> handleProductNotFoundException(ProductNotFoundException ex, WebRequest webRequest) {
 
 		String errorMessageDescription = ex.getLocalizedMessage();
 		if (errorMessageDescription == null) {
@@ -61,8 +66,10 @@ public class ApplicationPersistanceExceptionHandler extends ResponseEntityExcept
 		//errorMessageDescription = errorMessageDescription + "\t" + " ProductNotFoundException Exception Handler is called";
 		printStackTrace(ex, errorMessageDescription);
 
-		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
-		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
+		//DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
+		
+		ErrorMessage errorMessage2 = new ErrorMessage(HttpStatus.NOT_FOUND, errorMessageDescription, ex);
+		return new ResponseEntity<ErrorMessage>(errorMessage2, new HttpHeaders(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(value = ProductCategoryNotFoundException.class)
@@ -81,6 +88,21 @@ public class ApplicationPersistanceExceptionHandler extends ResponseEntityExcept
 		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(value = NullPointerException.class)
+	public ResponseEntity<Object> handleNullPointerException(NullPointerException ex, WebRequest webRequest) {
+
+		String errorMessageDescription = ex.getLocalizedMessage();
+		if (errorMessageDescription == null) {
+			errorMessageDescription = ex.toString();
+		}
+
+	//	errorMessageDescription = errorMessageDescription + "\t" + " NullPointerException Exception Handler is called";
+		printStackTrace(ex, errorMessageDescription);
+
+		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
+		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	@ExceptionHandler(value = EntityNotFoundException.class)
 	public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest webRequest) {
 
@@ -113,6 +135,24 @@ public class ApplicationPersistanceExceptionHandler extends ResponseEntityExcept
 		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(value = ServiceException.class)
+	public ResponseEntity<Object> handleServiceException(ServiceException ex, WebRequest webRequest) {
+
+		String errorMessageDescription = ex.getLocalizedMessage();
+		if (errorMessageDescription == null) {
+			errorMessageDescription = ex.toString();
+		}
+
+		errorMessageDescription = errorMessageDescription + "\t" + " ServiceException Handler is called";
+
+		printStackTrace(ex, errorMessageDescription);
+
+		DemoErrorMessage errorMessage = new DemoErrorMessage(errorMessageDescription, new Date());
+		return new ResponseEntity<Object>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	
+	
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity<Object> handleAnyException(Exception ex, WebRequest webRequest) {
 

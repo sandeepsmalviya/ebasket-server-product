@@ -3,6 +3,7 @@ package com.ebasket.server.product.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,8 +33,8 @@ public class ProductCategory implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int categoryId;
 
-	@NotNull
-	@NotEmpty
+	@NotNull(message = "Please provide categoryName")
+	@NotEmpty(message = "Please provide categoryName")
 	@Size(max = 255)
 	private String categoryName;
 
@@ -41,9 +42,15 @@ public class ProductCategory implements Serializable {
 	@Size(max = 255)
 	private String categoryDescription;
 
-	@OneToMany(targetEntity = Product.class)
-	private List productList;
+//	@OneToMany(cascade = CascadeType.ALL,targetEntity = Product.class)
+//	private List productList;
 
+	
+	@OneToMany(cascade = CascadeType.PERSIST,targetEntity = Product.class)
+	private List<Product> productList;
+
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

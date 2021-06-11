@@ -34,8 +34,8 @@ public class EbasketServerProductApplication {
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		logger.debug(applicationName + " is running product sample data filling job");
 		return args -> {
-			ResponseEntity<String> re = restTemplate.getForEntity("http://localhost:8080/product/filldb", String.class);
-			logger.debug(re.getBody());
+//			ResponseEntity<String> re = restTemplate.getForEntity("http://localhost:8080/product/filldb", String.class);
+//			logger.debug(re.getBody());
 		};
 	}
 
