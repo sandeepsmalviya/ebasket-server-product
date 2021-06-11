@@ -1,15 +1,15 @@
 package com.ebasket.server.product.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -39,41 +39,41 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int productId;
 
-	
 	@NotNull(message = "Product name is required.")
 	@NotEmpty(message = "Product name is required.")
 	@Size(max = 255)
 	private String productName;
-	
-	
+	private String productSku;
 
-	
-	private String productSKU;
-	
-	
-	private float productPrice;
-	private float productWeight;
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, optional = true)
+	@JoinColumn(name = "product_image_id")
+	private ProductImage productImage;
 
-	private String productCartDescription;
-	private String productShortDescription;
-	private String productLongDescription;
-
-	@Lob
-	private byte[] productThumb;
-
-	@Lob
-	private byte[] productImage;
-
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	// @ManyToOne(cascade = { CascadeType.PERSIST })
+	@ManyToOne(cascade = {  CascadeType.PERSIST, CascadeType.MERGE, }, optional = false)
+	@JoinColumn(name = "product_category_id")
 	private ProductCategory productCategory;
 
-	private Timestamp productCareatedDate;
-	private Timestamp productUpdatedDate;
-
-	private float productStock;
-	private boolean productLive;
-	private boolean productUnlimited;
-	private String productLocation;
+//	private float productPrice;
+//	private float productWeight;
+//
+//	private String productCartDescription;
+//	private String productShortDescription;
+//	private String productLongDescription;
+//
+//	@Lob
+//	private byte[] productThumb;
+//
+//	@Lob
+//	private byte[] productImage;
+//
+//	private Timestamp productCareatedDate;
+//	private Timestamp productUpdatedDate;
+//
+//	private float productStock;
+//	private boolean productLive;
+//	private boolean productUnlimited;
+//	private String productLocation;
 
 	@Override
 	public int hashCode() {

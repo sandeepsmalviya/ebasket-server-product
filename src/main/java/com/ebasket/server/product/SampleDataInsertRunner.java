@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.ebasket.server.product.entity.Product;
 import com.ebasket.server.product.entity.ProductCategory;
+import com.ebasket.server.product.entity.ProductImage;
 import com.ebasket.server.product.exception.ServiceException;
 import com.ebasket.server.product.services.ProductCategoryService;
 import com.ebasket.server.product.services.ProductService;
@@ -38,22 +39,51 @@ public class SampleDataInsertRunner implements CommandLineRunner {
 //		logger.debug(re.getBody());
 
 		createSampleProductCategory();
-		createSampleProducts();
+		createSampleProducts1();
+		createSampleProducts2();
+		
+		createSampleProducts3();
+		createSampleProducts4();
 
 	}
 
-	public void createSampleProducts() throws ServiceException {
+	public void createSampleProducts1() throws ServiceException {
 
 		// Product 1
+		ProductCategory productCategory1 = new ProductCategory();
+		productCategory1.setCategoryName("detached category");
+
+		ProductImage productImage1 = new ProductImage();
+		productImage1.setImageName("testImage.jpg");
+		productImage1.setImageDescription("Thumbnail image");
+
 		Product honey = new Product();
 		honey.setProductName("Honey");
+		honey.setProductCategory(productCategory1);
+		honey.setProductImage(productImage1);
 		productService.create(honey);
 
-		// Product 2
+	}
+
+	public void createSampleProducts2() throws ServiceException {
+
+		// Product 1
+		ProductCategory productCategory1 = new ProductCategory();
+		productCategory1.setCategoryName("detached category2");
+
+		ProductImage productImage1 = new ProductImage();
+		productImage1.setImageName("testImage2.jpg");
+		productImage1.setImageDescription("Thumbnail image2");
+
 		Product almond = new Product();
 		almond.setProductName("Almond");
+		almond.setProductCategory(productCategory1);
+		almond.setProductImage(productImage1);
 		productService.create(almond);
 
+	}
+
+	public void createSampleProducts3() throws ServiceException {
 		// Product 3
 		Product electricSwitch = new Product();
 		electricSwitch.setProductName("Electric Switch");
@@ -62,18 +92,37 @@ public class SampleDataInsertRunner implements CommandLineRunner {
 				.categoryDescription("Electricals and Wires").build();
 		List<ProductCategory> categoryList = new ArrayList<>();
 		categoryList.add(productCategory);
+
+		ProductImage productImage3 = new ProductImage();
+		productImage3.setImageName("testImage3.jpg");
+		productImage3.setImageDescription("Thumbnail image3");
+
 		electricSwitch.setProductCategory(productCategory);
+		electricSwitch.setProductImage(productImage3);
 		productService.create(electricSwitch);
 
-		// Product 4
+
+	}
+	public void createSampleProducts4() throws ServiceException {
+
+			// Product 4
 		Product fiberSwitch = new Product();
 		fiberSwitch.setProductName("Fiber Switch");
+		
+		
+		ProductImage productImage3 = new ProductImage();
+		productImage3.setImageName("testImage4.jpg");
+		productImage3.setImageDescription("Thumbnail image4");
+		
+		fiberSwitch.setProductImage(productImage3);
 
 		ProductCategory productCategory2 = ProductCategory.builder().categoryName("Fibers")
 				.categoryDescription("Fibers and Materials").build();
 		List<Product> productList = new ArrayList<>();
 		productList.add(fiberSwitch);
 		productCategory2.setProductList(productList);
+		
+		fiberSwitch.setProductCategory(productCategory2);
 		productCategoryService.create(productCategory2);
 
 	}

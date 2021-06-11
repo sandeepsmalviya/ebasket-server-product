@@ -13,6 +13,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,19 +40,13 @@ public class ProductCategory implements Serializable {
 	@Size(max = 255)
 	private String categoryName;
 
-
 	@Size(max = 255)
 	private String categoryDescription;
 
-//	@OneToMany(cascade = CascadeType.ALL,targetEntity = Product.class)
-//	private List productList;
-
-	
-	@OneToMany(cascade = CascadeType.PERSIST,targetEntity = Product.class)
+	@OneToMany(mappedBy = "productCategory", cascade = { CascadeType.PERSIST, CascadeType.MERGE})
+	@JsonIgnore
 	private List<Product> productList;
 
-	
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
