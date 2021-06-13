@@ -1,1 +1,1 @@
-# ebasket-server-product
+# ecommerce-catalog-server
