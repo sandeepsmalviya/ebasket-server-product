@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 //@EnableAspectJAutoProxy
 public class ApplicationLogConfiguration {
 
-	@Around("controllerLevelLog() &  serviceLevelLog()")
+	@Around("serviceLevelLog()")
 	public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
 		
 		log.debug("REST-API Enter: method invoked class {}:{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
@@ -26,6 +26,7 @@ public class ApplicationLogConfiguration {
 
 		log.debug("REST-API Exit: method invoked class {}:{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(),
 				joinPoint.getSignature().getName(), result);
+		
 		return result;
 	}
 

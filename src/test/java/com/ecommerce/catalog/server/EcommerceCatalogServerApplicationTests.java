@@ -13,5 +13,18 @@ class EcommerceCatalogServerApplicationTests {
 
 		assertEquals(5, 5, "5 is equal to five");
 	}
+	
+	@Test
+	void contextLoads2() {
+
+		assertEquals(5, 5, "5 is equal to five");
+	}
+	
+	
+	@Test
+	void contextLoads3() {
+
+		assertEquals(5, 5, "5 is equal to five");
+	}
 
 }
