@@ -50,8 +50,6 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public long count() throws ServiceException {
-
 		return productRepositoryDelegate.count();
-
 	}
 }

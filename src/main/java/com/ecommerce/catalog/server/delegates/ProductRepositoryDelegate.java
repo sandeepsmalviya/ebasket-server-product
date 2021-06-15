@@ -26,6 +26,7 @@ public class ProductRepositoryDelegate {
 	public Product findById(int productId) {
 
 		try {
+			
 			return productRepositoryH2.findById(productId).get();
 		} catch (NoSuchElementException exception) {
 			throw new ProductNotFoundException("Product with id = " + productId + " not found", exception);
@@ -35,6 +36,14 @@ public class ProductRepositoryDelegate {
 
 	}
 
+	public List<Product> findByProductNameJPA(String productName) {
+
+		List<Product> list = new ArrayList<>();
+		List<Product> products = productRepositoryH2.findByProductName(productName);		
+		return list;
+	}
+	
+	
 	public List<Product> findByProductName(String productName) {
 
 		List<Product> list = new ArrayList<>();
