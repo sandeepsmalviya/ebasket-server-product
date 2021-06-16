@@ -1,4 +1,4 @@
-package com.ecommerce.catalog.server.config.log;
+package com.ecommerce.catalog.server.config.aspect.log;
 
 import java.util.Arrays;
 
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 @Configuration
 //@EnableAspectJAutoProxy
-public class ApplicationLogConfiguration {
+public class ApplicationLogApect {
 
 	@Autowired
 	ApplicationServerProperties applicationServerProperties;

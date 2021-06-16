@@ -5,7 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,9 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductController {
 
-	// private static final Logger logger =
-	// LoggerFactory.getLogger(ProductController.class);
-
 	@Autowired
 	ApplicationServerProperties applicationProperties;
 
@@ -41,7 +37,8 @@ public class ProductController {
 	public ResponseEntity<Product> getProduct(@PathVariable int productId) {
 
 		Product product = productService.findById(productId);
-		return new ResponseEntity<>(product, HttpStatus.OK);
+		 return new ResponseEntity<>(product, HttpStatus.OK);
+		//return ApplicationResponseBuilder.buildResponse(product);
 	}
 
 	@GetMapping("/")
@@ -51,13 +48,13 @@ public class ProductController {
 
 		if (productList == null || productList.isEmpty()) {
 			Product[] productArray = productList.toArray(new Product[0]);
-			//return new ResponseEntity<>(productArray, HttpStatus.NO_CONTENT);
-			return MyResponseBuilder.getBuildResponse(productArray, HttpStatus.NO_CONTENT);
+			// return new ResponseEntity<>(productArray, HttpStatus.NO_CONTENT);
+			return ApplicationResponseBuilder.buildResponse(productArray, HttpStatus.NO_CONTENT);
 		} else {
 			Product[] productArray = productList.toArray(new Product[0]);
-			
-			//return new ResponseEntity<>(productArray, HttpStatus.OK);
-			return MyResponseBuilder.getBuildResponse(productArray, HttpStatus.OK);
+
+			// return new ResponseEntity<>(productArray, HttpStatus.OK);
+			return ApplicationResponseBuilder.buildResponse(productArray, HttpStatus.OK);
 		}
 
 	}

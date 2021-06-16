@@ -1,5 +1,7 @@
 package com.ecommerce.catalog.server.controller;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -8,12 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @UtilityClass
 @Slf4j
-public class MyResponseBuilder {
+public class ApplicationResponseBuilder {
 
-	public static <T> ResponseEntity getBuildResponse(T t, HttpStatus httpStatus) {
-		
-		log.debug("My Response Builder is called ... ");
-		return new ResponseEntity<T>(t, httpStatus);
+	public static <T> ResponseEntity buildResponse(T t, HttpStatus httpStatus) {
+			return new ResponseEntity<T>(t,httpStatus);
 	}
 
 }
